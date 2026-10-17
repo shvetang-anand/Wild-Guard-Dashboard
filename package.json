@@ -1,0 +1,19 @@
+{
+  "name": "wildguard_dashboard",
+  "version": "1.0.0",
+  "description": "1. Extract the ZIP. 2. Open `index.html` in Chrome, Edge, or Firefox. 3. Internet is not required for the prototype itself.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@google/genai": "^2.30.0",
+    "dotenv": "^18.0.8",
+    "express": "^5.3.0",
+    "openai": "^7.34.0"
+  }
+}

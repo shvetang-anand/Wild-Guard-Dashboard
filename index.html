@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />  
+<title>WildGuard | Conservation Dashboard</title>
+<style>
+:root{--bg:#f3f7f4;--panel:#fff;--ink:#19352b;--muted:#667578;--green:#176b4d;--mint:#dff3e7;--line:#e0e9e3;--amber:#fff0cf;--red:#ffe1dc;--shadow:0 12px 35px rgba(20,65,45,.07)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial}
+button,input,select,textarea{font:inherit}button{cursor:pointer}
+.app{max-width:1380px;margin:auto;padding:22px}.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:20px}.brand{display:flex;gap:12px;align-items:center}.logo{width:45px;height:45px;border-radius:15px;background:var(--green);color:white;display:grid;place-items:center;font-size:23px}.brand h1{font-size:20px;margin:0}.brand p{margin:0;color:var(--muted);font-size:12px}.topright{display:flex;gap:10px;align-items:center}.pill{background:var(--mint);color:var(--green);padding:7px 11px;border-radius:999px;font-size:12px;font-weight:700}
+.hero{background:linear-gradient(120deg,#123f30,#176b4d 65%,#2e8b62);color:white;border-radius:24px;padding:28px;display:grid;grid-template-columns:1.3fr .7fr;gap:20px;box-shadow:var(--shadow);overflow:hidden;position:relative}.eyebrow{text-transform:uppercase;letter-spacing:1.5px;font-size:11px;color:#bfe9d1;font-weight:800}.hero h2{font-size:clamp(27px,4vw,42px);line-height:1.1;margin:10px 0}.hero p{max-width:620px;color:#e0f0e7;margin:0 0 20px}.hero-actions{display:flex;gap:10px;flex-wrap:wrap}.btn{border:0;border-radius:12px;padding:10px 14px;font-weight:750}.btn.primary{background:#fff;color:#174b36}.btn.ghost{background:#ffffff20;color:white;border:1px solid #ffffff50}.hero-side{align-self:center;display:grid;grid-template-columns:1fr 1fr;gap:10px}.hero-stat{background:#ffffff15;border:1px solid #ffffff28;border-radius:16px;padding:16px}.hero-stat b{display:block;font-size:25px}.hero-stat span{font-size:12px;color:#d8eee2}
+.filters{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:20px 0}.filters input,.filters select{border:1px solid var(--line);background:#fff;border-radius:12px;padding:11px 13px;color:var(--ink)}.filters input{flex:1;min-width:190px}.sectionhead{display:flex;justify-content:space-between;align-items:end;gap:10px;margin:22px 0 12px}.sectionhead h3{margin:0;font-size:19px}.sectionhead p{margin:3px 0 0;color:var(--muted);font-size:13px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}.kpi,.panel,.species-card{background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}.kpi{padding:17px}.kpi .label{color:var(--muted);font-size:12px}.kpi strong{font-size:28px;display:block;margin:4px 0}.kpi small{color:var(--green);font-size:11px}
+.content-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:15px;margin-top:15px}.panel{padding:18px}.panel h3{margin:0 0 4px;font-size:16px}.sub{color:var(--muted);font-size:12px;margin:0 0 16px}.barrow{display:grid;grid-template-columns:120px 1fr 26px;gap:9px;align-items:center;margin:14px 0;font-size:12px}.bar{height:9px;border-radius:99px;background:#edf2ee;overflow:hidden}.bar i{height:100%;display:block;border-radius:99px;background:linear-gradient(90deg,#3c9d70,#176b4d)}.callout{padding:13px;border-radius:13px;background:#f0f8f2;color:#345e49;font-size:13px;margin-top:12px}
+.species-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.species-card{overflow:hidden}.animal-art{height:112px;display:grid;place-items:center;background:linear-gradient(130deg,#d8efdf,#edf6dc);font-size:54px}.species-body{padding:15px}.species-title{display:flex;justify-content:space-between;gap:8px;align-items:start}.species-title h4{margin:0;font-size:15px}.tag{font-size:10px;font-weight:800;padding:5px 7px;border-radius:99px;white-space:nowrap;background:var(--red);color:#9a3428}.tag.vulnerable{background:var(--amber);color:#815500}.tag.demo{background:#e9e9ff;color:#4b4a9a}.species-body p{color:var(--muted);font-size:12px;margin:9px 0}.meta{font-size:11px;color:#40594d;border-top:1px solid var(--line);padding-top:10px}.card-actions{display:flex;gap:8px;margin-top:12px}.mini{background:#edf6f0;color:var(--green);border:0;border-radius:9px;padding:8px 10px;font-size:11px;font-weight:800}
+.lower{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:15px}.assistant{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:var(--shadow)}.assistant-top{display:flex;justify-content:space-between;align-items:center}.assistant-top h3{margin:0}.ai-badge{background:#e7e9ff;color:#4c4aa1;padding:5px 8px;border-radius:8px;font-size:10px;font-weight:800}.chatbox{height:190px;overflow:auto;background:#f7faf8;border-radius:12px;padding:12px;margin:13px 0;font-size:13px}.msg{padding:10px 12px;border-radius:12px;margin:7px 0;max-width:95%;white-space:pre-wrap}.bot{background:#e7f4eb}.user{background:#dce9ff;margin-left:auto}.askrow{display:flex;gap:8px}.askrow input{min-width:0;flex:1;border:1px solid var(--line);border-radius:10px;padding:10px}.askrow button{background:var(--green);color:white;border:0;border-radius:10px;padding:0 14px;font-weight:800}.notice{font-size:11px;color:var(--muted);margin-top:9px}.action-item{display:flex;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}.action-item:last-child{border-bottom:0}.action-icon{width:33px;height:33px;flex:none;display:grid;place-items:center;background:var(--mint);border-radius:11px}.action-item b{font-size:13px}.action-item p{font-size:12px;color:var(--muted);margin:2px 0 0}
+footer{padding:24px 3px 8px;text-align:center;color:var(--muted);font-size:11px}
+.modalback{position:fixed;inset:0;background:#10271dcc;display:none;align-items:center;justify-content:center;padding:18px;z-index:10}.modal{max-width:540px;width:100%;background:#fff;border-radius:20px;padding:22px;max-height:90vh;overflow:auto}.modal h3{margin-top:0}.modalclose{float:right;border:0;background:#edf3ef;border-radius:8px;padding:5px 10px}.source-list{padding-left:18px;font-size:13px}.source-list a{color:var(--green)}
+@media(max-width:850px){.hero{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.content-grid,.lower{grid-template-columns:1fr}.species-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.app{padding:13px}.top{align-items:flex-start}.topright{flex-direction:column;align-items:flex-end}.hero{padding:22px}.species-grid{grid-template-columns:1fr}.barrow{grid-template-columns:95px 1fr 20px}.kpi{padding:13px}.kpi strong{font-size:24px}}
+/* WildGuard: improve wildlife card readability */
+.animal-art {
+  position: relative;
+  height: 300px;
+  overflow: hidden;
+  border-radius: 14px;
+  background: #e8efe5;
+}
+.animal-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  background: #edf2e9;
+}
+
+.species-card {
+  overflow: hidden;
+}
+
+.species-body {
+  background: #ffffff;
+  padding: 16px;
+  color: #24352b;
+}
+
+.species-title h4 {
+  color: #203b2b;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+.species-body {
+  background: #ffffff;
+  color: #26382d;
+  padding: 16px;
+}
+
+.species-body p {
+  color: #46574b;
+  line-height: 1.6;
+}
+
+.species-title h4 {
+  color: #183d2a;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.species-card .status {
+  font-weight: 700;
+}
+.species-photo {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.species-photo-full {
+  object-fit: contain !important;
+  padding: 6px;
+  background: #edf2e9;
+}
+/* WildGuard species details popup */
+#modalcontent {
+  color: #26382d;
+  line-height: 1.6;
+}
+
+.detail-profile {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.detail-location {
+  color: #287348;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 12px;
+}
+
+.detail-photo {
+  display: block;
+  width: 100%;
+  height: 260px;
+  object-fit: contain;
+  background: #edf2e9;
+  border-radius: 14px;
+  margin-bottom: 16px;
+}
+
+.detail-profile h2 {
+  color: #183d2a;
+  font-size: 26px;
+  line-height: 1.25;
+  margin: 10px 0 4px;
+}
+
+.detail-scientific {
+  color: #68796d;
+  margin: 0 0 12px;
+}
+
+.detail-status {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: #e1f2e6;
+  color: #205f38;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.detail-section {
+  padding: 16px;
+  margin: 12px 0;
+  background: #f5f8f4;
+  border-radius: 12px;
+}
+
+.detail-section h3 {
+  color: #214b32;
+  font-size: 16px;
+  margin: 0 0 8px;
+}
+
+.detail-section p {
+  margin: 0;
+  color: #46574b;
+}
+
+.detail-section ul {
+  margin: 0;
+  padding-left: 22px;
+  color: #46574b;
+}
+
+.detail-action {
+  background: #eaf4eb;
+  border-left: 4px solid #398254;
+}
+
+.detail-note {
+  color: #69766d;
+  font-size: 12px;
+  line-height: 1.6;
+  margin-top: 16px;
+}
+
+.detail-source a {
+  color: #217346;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.detail-source a:hover {
+  text-decoration: underline;
+}
+
+/* WildGuard conservation status chart */
+.status-chart {
+  display: grid;
+  gap: 18px;
+  margin-top: 24px;
+}
+
+.status-row {
+  padding: 15px 16px;
+  border: 1px solid #e4ece6;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #ffffff, #f7faf8);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.status-row:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(31, 75, 54, 0.09);
+}
+
+.status-row-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 11px;
+}
+
+.status-name {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-weight: 600;
+  color: #263d32;
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--status-color);
+}
+
+.status-metrics {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.status-count {
+  font-size: 19px;
+  font-weight: 750;
+  color: #203b2d;
+}
+
+.status-percent {
+  font-size: 12px;
+  color: #62756a;
+  font-weight: 600;
+}
+
+.status-track {
+  height: 10px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #eaf0eb;
+}
+
+.status-fill {
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(
+    90deg,
+    var(--status-color),
+    #347458
+  );
+  animation: statusGrow 700ms ease forwards;
+  transform-origin: left;
+}
+
+@keyframes statusGrow {
+  from { width: 0; }
+  to { width: var(--status-width); }
+}
+
+.status-summary {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 20px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: #edf6ef;
+  color: #345b44;
+  font-size: 13px;
+}
+
+.status-empty {
+  padding: 24px;
+  text-align: center;
+  border-radius: 14px;
+  background: #f4f8f5;
+  color: #64766a;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .status-row {
+    transition: none;
+  }
+
+  .status-fill {
+    animation: none;
+  }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="brand"><div class="logo">✦</div><div><h1>WildGuard</h1><p>Threatened wildlife • Conservation intelligence</p></div></div>
+    <div class="topright"><span class="pill">CA1 PROJECT</span><span style="font-size:12px;color:var(--muted)">Kerala + Andhra Pradesh</span></div>
+  </header>
+
+  <section class="hero">
+    <div>
+      <div class="eyebrow">Biodiversity monitoring dashboard</div>
+      <h2>Protect the wild.<br>Act on the evidence.</h2>
+      <p>Explore threatened species across Kerala and Andhra Pradesh, understand their pressures, and connect each threat to practical conservation measures.</p>
+      <div class="hero-actions"><button class="btn primary" onclick="document.getElementById('speciesSection').scrollIntoView({behavior:'smooth'})">Explore species ↓</button><button class="btn ghost" onclick="openSources()">Data & source notes</button></div>
+    </div>
+    <div class="hero-side">
+      <div class="hero-stat"><b id="speciesCount">6</b><span>Species profiles</span></div>
+      <div class="hero-stat"><b>2</b><span>States covered</span></div>
+      <div class="hero-stat"><b>3</b><span>Threat categories</span></div>
+      <div class="hero-stat"><b>24/7</b><span>Learning resource</span></div>
+    </div>
+  </section>
+
+  <div class="filters">
+    <input id="search" placeholder="Search species, habitat or threat…" oninput="renderSpecies()" aria-label="Search species"/>
+    <select id="stateFilter" onchange="renderSpecies()"><option value="All">All states</option><option>Kerala</option><option>Andhra Pradesh</option></select>
+    <select id="statusFilter" onchange="renderSpecies()"><option value="All">All conservation statuses</option><option>Critically Endangered</option><option>Endangered</option><option>Vulnerable</option><option>Least Concern</option></select>
+  </div>
+
+ <div class="kpis">
+  <div class="kpi">
+    <div class="label">Species profiles</div>
+    <strong id="kpispecies">0</strong>
+    <small>In this dashboard</small>
+  </div>
+
+  <div class="kpi">
+    <div class="label">Kerala</div>
+    <strong id="kpikerala">0</strong>
+    <small>Species profiles</small>
+  </div>
+
+  <div class="kpi">
+    <div class="label">Andhra Pradesh</div>
+    <strong id="kpiandhra">0</strong>
+    <small>Species profiles</small>
+  </div>
+
+  <div class="kpi">
+    <div class="label">Endangered or worse</div>
+    <strong id="kpithreat">0</strong>
+    <small>Global conservation status</small>
+  </div>
+  </div>
+
+  <div class="content-grid">
+    <section class="panel">
+      <h3>Threat overview</h3><p class="sub">Threats reported in the selected species profiles. Counts indicate how often each threat is tagged, not its statewide prevalence.</p>
+      
+<div id="threatOverview"></div>
+      <div class="callout"><b>How to read this:</b> counts show how often a threat appears in the displayed species profiles. Replace them with verified project data before presenting them as findings.</div>
+    </section>
+    <section class="panel">
+      <h3>Conservation priorities</h3><p class="sub">Practical responses matched to common threat types.</p>
+      <div class="action-item"><div class="action-icon">🌳</div><div><b>Protect connected habitats</b><p>Prevent further fragmentation and maintain wildlife corridors.</p></div></div>
+      <div class="action-item"><div class="action-icon">🤝</div><div><b>Reduce human–wildlife conflict</b><p>Support early-warning systems, safe waste handling and community response.</p></div></div>
+      <div class="action-item"><div class="action-icon">🔎</div><div><b>Improve monitoring</b><p>Use camera traps, field surveys and verified reporting by trained teams.</p></div></div>
+    </section>
+  </div>
+
+<section class="panel">
+  <h3>Conservation status</h3>
+  <p class="sub">
+    Global IUCN conservation categories for the species profiles shown.
+  </p>
+  <div id="statusOverview"></div>
+</section>
+
+  <div class="sectionhead" id="speciesSection"><div><h3>Species explorer</h3><p>Explore species profiles, habitats, threats and conservation actions.</p></div><span class="pill" id="resultCount">6 records</span></div>
+  <section class="species-grid" id="speciesGrid"></section>
+
+  <div class="lower">
+    <section class="assistant">
+      <div class="assistant-top"><h3>Conservation AI assistant</h3><span class="ai-badge">AI-POWERED ASSISTANT</span></div>
+      <p class="sub">Ask about species, threats and conservation options. Responses are generated by an AI service and should be checked against reliable conservation sources.</p>
+      <div class="chatbox" id="chatbox"><div class="msg bot">Hi! Ask me things like “How can we protect the Nilgiri tahr?” or “What are the main threats in Andhra Pradesh?”</div></div>
+      <div class="askrow"><input id="question" placeholder="Ask a conservation question…" onkeydown="if(event.key==='Enter')askAssistant()"/><button onclick="askAssistant()">Ask</button></div>
+      <div class="notice"><div class="notice">AI responses are generated through a secure backend. Verify conservation facts using the linked scientific and official sources.</div>
+    </section>
+    <section class="panel">
+      <h3>How technology can help</h3><p class="sub">Possible future features for a real conservation system.</p>
+      <div class="action-item"><div class="action-icon">📷</div><div><b>Camera-trap image review</b><p>Assist trained researchers in sorting wildlife images; verify every identification.</p></div></div>
+      <div class="action-item"><div class="action-icon">🛰️</div><div><b>Habitat change monitoring</b><p>Compare dated satellite imagery from reputable sources.</p></div></div>
+      <div class="action-item"><div class="action-icon">📊</div><div><b>Evidence-led planning</b><p>Prioritize surveys and restoration using sourced observations, not invented population figures.</p></div></div>
+    </section>
+  </div>
+  <footer>Student prototype for Environmental Studies CA1 • Conservation status is global unless explicitly stated otherwise • Verify all records and citations before submission.</footer>
+</div>
+
+<div class="modalback" id="modalback" onclick="if(event.target.id==='modalback')closeModal()"><div class="modal"><button class="modalclose" onclick="closeModal()">Close ✕</button><div id="modalcontent"></div></div></div>
+<script> 
+const species = [
+  {
+    name: "Nilgiri tahr",
+    scientificName: "Nilgiritragus hylocrius",
+    image: "https://commons.wikimedia.org/wiki/Special:FilePath/Nilgiri_Tahr_DSC3979.jpg?width=800",
+    state: "Kerala",
+    status: "Endangered",
+    icon: "🐐",
+    habitat: "High-elevation grasslands and rocky slopes of the southern Western Ghats.",
+    threats: ["Habitat loss", "Habitat fragmentation", "Poaching"],
+    action: "Protect montane grasslands, restore degraded habitat, and maintain protected areas.",
+    note: "Global IUCN status: Endangered. Kerala's 2025 synchronized survey estimated 1,365 Nilgiri tahrs in the state, including 841 in Eravikulam National Park.",
+    source: "https://forest.kerala.gov.in/forestapp/public/documents/publications/file0508202512%3A06%3A30.pdf"
+  },
+  {
+    name: "Lion-tailed macaque",
+    scientificName: "Macaca silenus",
+    image: "https://commons.wikimedia.org/wiki/Special:FilePath/Lion-tailed_macaque_DSCN2234.jpg?width=800",
+    state: "Kerala",
+    status: "Endangered",
+    icon: "🐒",
+    habitat: "Tropical evergreen forests of the Western Ghats.",
+    threats: ["Habitat loss", "Forest fragmentation", "Hunting"],
+    action: "Protect evergreen forest, reconnect suitable habitat patches, and reduce disturbance.",
+    note: "Global IUCN status. Endemic to the Western Ghats; verify local population figures before publishing.",
+    source: "https://doi.org/10.2305/IUCN.UK.2020-2.RLTS.T12559A17951402.en"
+  },
+  {
+    name: "Asian elephant",
+    scientificName: "Elephas maximus",
+    image: "https://commons.wikimedia.org/wiki/Special:FilePath/Asian_Elephant_(Elephas_maximus)_02.jpg?width=800",
+    state: "Kerala",
+    status: "Endangered",
+    icon: "🐘",
+    habitat: "Forest, grassland, shrubland, and connected movement landscapes.",
+    threats: ["Habitat fragmentation", "Human-elephant conflict", "Poaching"],
+    action: "Protect movement corridors, reduce conflict risks, and support community-based early-warning systems.",
+    note: "Global IUCN status. This species occurs across several Asian countries, not only Kerala.",
+    source: "https://doi.org/10.2305/IUCN.UK.2020-3.RLTS.T7140A45818198.en"
+  },
+  {
+    name: "Jerdon's courser",
+    scientificName: "Rhinoptilus bitorquatus",
+    image: "https://commons.wikimedia.org/wiki/Special:FilePath/JC_PJ.jpg",
+    state: "Andhra Pradesh",
+    status: "Critically Endangered",
+    icon: "🐦",
+    habitat: "Dry scrub and shrubland, including the Sri Lankamalleswara Wildlife Sanctuary landscape.",
+    threats: ["Habitat degradation", "Habitat loss"],
+    action: "Protect suitable scrub habitat, prevent degradation, and support expert-led monitoring.",
+    note: "IUCN assessment published in 2025, based on a 2024 assessment. Do not claim a recent sighting without verified evidence.",
+    source: "https://doi.org/10.2305/IUCN.UK.2025-2.RLTS.T22694103A217265541.en"
+  },
+  {
+    name: "Yellow-throated bulbul",
+    scientificName: "Pycnonotus xantholaemus",
+    image: "https://commons.wikimedia.org/wiki/Special:FilePath/Rishi_Valley_School_-_Pycnonotus_xantholaemus.jpg?width=800",
+    state: "Andhra Pradesh",
+    status: "Least Concern",
+    icon: "🐤",
+    habitat: "Rocky hillsides, scrub, and dry or moist deciduous forest in southern India.",
+    threats: ["Habitat degradation", "Quarrying", "Development"],
+    action: "Protect rocky scrub and known habitat sites, and monitor local populations.",
+    note: "The 2016 IUCN assessment classified this species as Vulnerable. The IUCN page lists its latest global assessment as 2024 — Least Concern (LC). Local habitat threats may still remain.",
+  },
+  {
+    name: "Indian pangolin",
+    scientificName: "Manis crassicaudata",
+    image: "https://commons.wikimedia.org/wiki/Special:FilePath/Indian_pangolin_%28Manis_crassicaudata%29_-_oo_246940_%28cropped_to_A%29.jpg?width=800",
+    state: "Andhra Pradesh",
+    status: "Endangered",
+    icon: "🦔",
+    habitat: "Forest, shrubland, grassland, and some human-modified terrestrial habitats.",
+    threats: ["Poaching", "Illegal wildlife trade", "Habitat loss"],
+    action: "Support anti-trafficking enforcement, public awareness, and protection of suitable habitat.",
+    note: "Global IUCN status. Avoid publishing precise locations of vulnerable wildlife.",
+    source: "https://doi.org/10.2305/IUCN.UK.2019-3.RLTS.T12761A123583998.en"
+  }
+];
+function statusClass(s){return s==="Vulnerable"?"tag vulnerable":s==="Critically Endangered"?"tag":"tag"}
+
+
+function updateThreatOverview(records = species) {
+  const counts = {};
+
+  records.forEach((s) => {
+    (s.threats || []).forEach((threat) => {
+      counts[threat] = (counts[threat] || 0) + 1;
+    });
+  });
+
+  const topThreats = Object.entries(counts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5);
+
+  const maxCount = Math.max(
+    1,
+    ...topThreats.map((item) => item[1])
+  );
+
+  const container = document.getElementById("threatOverview");
+  if (!container) return;
+
+container.innerHTML = topThreats.length
+  ? topThreats.map(([threat, count]) => `
+      <div class="barrow"
+           role="button"
+           tabindex="0"
+           data-threat="${threat}"
+           title="Click to filter species by ${threat}"
+           style="cursor:pointer">
+        <span>${threat}</span>
+        <div class="bar">
+          <i style="width:${(count / maxCount) * 100}%"></i>
+        </div>
+        <b>${count}</b>
+      </div>
+    `).join("")
+  : "<p>No threats found for these filters.</p>";
+
+container.querySelectorAll(".barrow").forEach((row) => {
+  const filterByThreat = () => {
+    const threat = row.dataset.threat;
+    const search = document.getElementById("search");
+
+    if (search) {
+      search.value = threat;
+      renderSpecies();
+      document.getElementById("speciesSection")
+        ?.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  row.addEventListener("click", filterByThreat);
+
+  row.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      filterByThreat();
+    }
+  });
+});
+
+}
+function updateOverviewStats() {
+  document.getElementById("kpispecies").textContent =
+    species.length;
+
+  document.getElementById("kpikerala").textContent =
+    species.filter(s => s.state === "Kerala").length;
+
+  document.getElementById("kpiandhra").textContent =
+    species.filter(s => s.state === "Andhra Pradesh").length;
+
+  document.getElementById("kpithreat").textContent =
+    species.filter(s =>
+      ["Endangered", "Critically Endangered"].includes(s.status)
+    ).length;
+}
+  function updateStatusOverview(records = species) {
+  const container = document.getElementById("statusOverview");
+  if (!container) return;
+
+  const counts = {};
+
+  records.forEach((s) => {
+    const status = s.status || "Unknown";
+    counts[status] = (counts[status] || 0) + 1;
+  });
+
+  const entries = Object.entries(counts).sort(
+    ([a], [b]) => {
+      const order = [
+        "Critically Endangered",
+        "Endangered",
+        "Vulnerable",
+        "Near Threatened",
+        "Least Concern",
+        "Data Deficient",
+        "Not Evaluated",
+        "Unknown"
+      ];
+
+      const ai = order.indexOf(a);
+      const bi = order.indexOf(b);
+
+      return (ai === -1 ? 999 : ai) -
+             (bi === -1 ? 999 : bi) ||
+             a.localeCompare(b);
+    }
+  );
+
+  const total = records.length;
+
+  const colors = {
+    "Critically Endangered": "#b42332",
+    "Endangered": "#d65a45",
+    "Vulnerable": "#d58a2a",
+    "Near Threatened": "#b4a32d",
+    "Least Concern": "#39815b",
+    "Data Deficient": "#64748b",
+    "Not Evaluated": "#64748b",
+    "Unknown": "#64748b"
+  };
+
+  if (total === 0) {
+    container.innerHTML = `
+      <div class="status-empty">
+        No species match these filters.
+        Try selecting a different state or status.
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = `
+    <div class="status-chart">
+      ${entries.map(([status, count]) => {
+        const percent = Math.round((count / total) * 100);
+        const color = colors[status] || "#64748b";
+
+        return `
+          <div class="status-row">
+            <div class="status-row-top">
+              <div class="status-name">
+                <span
+                  class="status-dot"
+                  style="--status-color:${color}"
+                ></span>
+                <span>${status}</span>
+              </div>
+
+              <div class="status-metrics">
+                <span class="status-count">${count}</span>
+                <span class="status-percent">${percent}%</span>
+              </div>
+            </div>
+
+            <div
+              class="status-track"
+              role="progressbar"
+              aria-label="${status}"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              aria-valuenow="${percent}"
+            >
+              <div
+                class="status-fill"
+                style="--status-color:${color};
+                       --status-width:${percent}%"
+              ></div>
+            </div>
+          </div>
+        `;
+      }).join("")}
+    </div>
+
+    <div class="status-summary">
+      <span><strong>${total}</strong> species in current view</span>
+      <span>Percentages are of the displayed records</span>
+    </div>
+  `;
+}
+function renderSpecies(){
+ const q=document.getElementById('search').value.toLowerCase(), st=document.getElementById('stateFilter').value, status=document.getElementById('statusFilter').value;
+ const rows=species.filter(s=>(st==="All"||s.state===st)&&(status==="All"||s.status===status)&&[s.name,s.state,s.habitat,s.status,...s.threats].join(' ').toLowerCase().includes(q));
+ updateThreatOverview(rows);
+ updateStatusOverview(rows);
+ document.getElementById('speciesGrid').innerHTML=rows.map((s,i)=>`<article class="species-card"><div class="animal-art"><img
+  src="${s.image}"
+  alt="${s.name}"
+  class="species-photo ${s.name === 'Asian elephant' || s.name === 'Indian pangolin' ? 'species-photo-full' : ''}"
+  loading="lazy"></div><div class="species-body"><div class="species-title"><h4>${s.name}</h4><span class="${statusClass(s.status)}">${s.status}</span></div><p><b>${s.state}</b> · ${s.habitat}</p><div class="meta"><b>Main threats:</b> ${s.threats.join(', ')}</div><div class="card-actions"><button class="mini" onclick="showDetails('${s.name.replace(/'/g,"\\'")}')">Details & actions</button></div></div></article>`).join('')||'<div class="panel">No species match these filters.</div>';
+}
+function showDetails(name) {
+  const s = species.find(x => x.name === name);
+  if (!s) return;
+
+  document.getElementById("modalcontent").innerHTML = `
+    <div class="eyebrow" style="color:var(--green)">
+      ${s.state}
+    </div>
+
+    <h3>${s.icon} ${s.name}</h3>
+
+    <p><b>Scientific name:</b> <i>${s.scientificName || "Not specified"}</i></p>
+
+    <p><b>Conservation status:</b>
+      ${s.status} (global status; check the assessment date)
+    </p>
+
+    <p><b>Habitat:</b> ${s.habitat}</p>
+
+    <p><b>Threats in this prototype:</b>
+      ${s.threats.join(", ")}
+    </p>
+
+    <div class="callout">
+      <b>Suggested conservation response</b><br>
+      ${s.action}
+    </div>
+
+    <p style="font-size:12px;color:var(--muted)">
+      ${s.note}
+    </p>
+
+    ${
+      s.source
+        ? `<p>
+             <a href="${s.source}"
+                target="_blank"
+                rel="noopener noreferrer">
+               View reference source ↗
+             </a>
+           </p>`
+        : `<p>Source link not yet added.</p>`
+    }
+  `;
+
+  document.getElementById("modalback").style.display = "flex";
+}
+
+function openSources() {
+  document.getElementById("modalcontent").innerHTML = `
+    <h3>Data &amp; source notes</h3>
+
+    <p>
+      WildGuard presents conservation information for selected species
+      recorded in Kerala and Andhra Pradesh. Global conservation
+      categories refer to the IUCN Red List assessments.
+    </p>
+
+    <ul class="source-list">
+      <li>
+        <a href="https://www.iucnredlist.org/"
+           target="_blank" rel="noopener noreferrer">
+          IUCN Red List
+        </a>
+        — global conservation categories and species assessments.
+      </li>
+      <li>
+        <a href="https://forest.kerala.gov.in/"
+           target="_blank" rel="noopener noreferrer">
+          Kerala Forest Department
+        </a>
+        — state wildlife and forest information.
+      </li>
+      <li>
+        <a href="https://forests.ap.gov.in/"
+           target="_blank" rel="noopener noreferrer">
+          Andhra Pradesh Forest Department
+        </a>
+        — state forest and wildlife information.
+      </li>
+      <li>
+        <a href="https://www.wwfindia.org/"
+           target="_blank" rel="noopener noreferrer">
+          WWF-India
+        </a>
+        — wildlife and conservation background.
+      </li>
+    </ul>
+
+    <p>
+      <b>How to interpret the dashboard:</b>
+      Threat counts show how often a threat is tagged in the displayed
+      species profiles. They are not measured statewide statistics.
+      Species profiles do not represent a complete inventory of wildlife
+      in either state.
+    </p>
+
+    <p>
+      Conservation categories and species facts should be checked against
+      the linked references before formal submission.
+    </p>
+    
+<h4>Wildlife image credits</h4>
+<ul class="source-list">
+  <li>
+    <b>Nilgiri tahr:</b>
+    <a href="https://commons.wikimedia.org/wiki/File:Nilgiri_Tahr_DSC3979.jpg"
+       target="_blank" rel="noopener noreferrer">
+      Wikimedia Commons — original image page
+    </a>
+  </li>
+  <li>
+    <b>Lion-tailed macaque:</b>
+    <a href="https://commons.wikimedia.org/wiki/File:Lion-tailed_macaque_DSCN2234.jpg"
+       target="_blank" rel="noopener noreferrer">
+      Wikimedia Commons — original image page
+    </a>
+  </li>
+  <li>
+    <b>Asian elephant:</b>
+    <a href="https://commons.wikimedia.org/wiki/File:Asian_Elephant_(Elephas_maximus)_02.jpg"
+       target="_blank" rel="noopener noreferrer">
+      Wikimedia Commons — original image page
+    </a>
+  </li>
+  <li>
+    <b>Jerdon's courser:</b>
+    <a href="https://commons.wikimedia.org/wiki/File:JC_PJ.jpg"
+       target="_blank" rel="noopener noreferrer">
+      Wikimedia Commons — original image page
+    </a>
+  </li>
+  <li>
+    <b>Yellow-throated bulbul:</b>
+    <a href="https://commons.wikimedia.org/wiki/File:Rishi_Valley_School_-_Pycnonotus_xantholaemus.jpg"
+       target="_blank" rel="noopener noreferrer">
+      Wikimedia Commons — original image page
+    </a>
+  </li>
+  <li>
+    <b>Indian pangolin:</b>
+    <a href="https://commons.wikimedia.org/wiki/File:Indian_pangolin_(Manis_crassicaudata)_-_oo_246940_(cropped_to_A).jpg"
+       target="_blank" rel="noopener noreferrer">
+      Wikimedia Commons — original image page
+    </a>
+  </li>
+</ul>
+<p>
+  Check each original image page for the photographer, licence,
+  and required attribution before final submission.
+</p>
+
+  `;
+
+  document.getElementById("modalback").style.display = "flex";
+}
+
+function closeModal(){document.getElementById('modalback').style.display='none'}
+function addMsg(text,cls){const box=document.getElementById('chatbox'),d=document.createElement('div');d.className='msg '+cls;d.textContent=text;box.appendChild(d);box.scrollTop=box.scrollHeight}
+{
+window.askAssistant = async function () {
+  const input = document.getElementById("question");
+  const chatbox = document.getElementById("chatbox");
+  const question = input.value.trim();
+
+  if (!question) {
+    alert("Please enter a question first.");
+    return;
+  }
+
+  const userMsg = document.createElement("div");
+  userMsg.className = "msg user";
+  userMsg.textContent = question;
+  chatbox.appendChild(userMsg);
+
+  const aiMsg = document.createElement("div");
+  aiMsg.className = "msg assistant";
+  aiMsg.textContent = "WildGuard AI is thinking...";
+  chatbox.appendChild(aiMsg);
+
+  input.value = "";
+  chatbox.scrollTop = chatbox.scrollHeight;
+
+  try {
+    const response = await fetch("/api/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ message: question })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "API request failed.");
+    }
+
+    aiMsg.textContent = data.reply || "No answer returned.";
+  } catch (error) {
+    aiMsg.textContent = "Error: " + error.message;
+    console.error("WildGuard chat error:", error);
+  }
+
+  chatbox.scrollTop = chatbox.scrollHeight;
+}
+};
+renderSpecies();
+updateOverviewStats();
+updateThreatOverview();
+updateStatusOverview();
+</script>
+</body>
+</html>
