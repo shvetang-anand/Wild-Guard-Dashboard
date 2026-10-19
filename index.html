@@ -8,7 +8,23 @@
 :root{--bg:#f3f7f4;--panel:#fff;--ink:#19352b;--muted:#667578;--green:#176b4d;--mint:#dff3e7;--line:#e0e9e3;--amber:#fff0cf;--red:#ffe1dc;--shadow:0 12px 35px rgba(20,65,45,.07)}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial}
 button,input,select,textarea{font:inherit}button{cursor:pointer}
-.app{max-width:1380px;margin:auto;padding:22px}.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:20px}.brand{display:flex;gap:12px;align-items:center}.logo{width:45px;height:45px;border-radius:15px;background:var(--green);color:white;display:grid;place-items:center;font-size:23px}.brand h1{font-size:20px;margin:0}.brand p{margin:0;color:var(--muted);font-size:12px}.topright{display:flex;gap:10px;align-items:center}.pill{background:var(--mint);color:var(--green);padding:7px 11px;border-radius:999px;font-size:12px;font-weight:700}
+.app{max-width:1380px;margin:auto;padding:22px}.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:20px}.brand{display:flex;gap:12px;align-items:center}.logo {
+    width: 52px;
+    height: 52px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    background: transparent;
+    border-radius: 12px;
+}
+
+.logo img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+}.brand h1{font-size:20px;margin:0}.brand p{margin:0;color:var(--muted);font-size:12px}.topright{display:flex;gap:10px;align-items:center}.pill{background:var(--mint);color:var(--green);padding:7px 11px;border-radius:999px;font-size:12px;font-weight:700}
 .hero{background:linear-gradient(120deg,#123f30,#176b4d 65%,#2e8b62);color:white;border-radius:24px;padding:28px;display:grid;grid-template-columns:1.3fr .7fr;gap:20px;box-shadow:var(--shadow);overflow:hidden;position:relative}.eyebrow{text-transform:uppercase;letter-spacing:1.5px;font-size:11px;color:#bfe9d1;font-weight:800}.hero h2{font-size:clamp(27px,4vw,42px);line-height:1.1;margin:10px 0}.hero p{max-width:620px;color:#e0f0e7;margin:0 0 20px}.hero-actions{display:flex;gap:10px;flex-wrap:wrap}.btn{border:0;border-radius:12px;padding:10px 14px;font-weight:750}.btn.primary{background:#fff;color:#174b36}.btn.ghost{background:#ffffff20;color:white;border:1px solid #ffffff50}.hero-side{align-self:center;display:grid;grid-template-columns:1fr 1fr;gap:10px}.hero-stat{background:#ffffff15;border:1px solid #ffffff28;border-radius:16px;padding:16px}.hero-stat b{display:block;font-size:25px}.hero-stat span{font-size:12px;color:#d8eee2}
 .filters{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:20px 0}.filters input,.filters select{border:1px solid var(--line);background:#fff;border-radius:12px;padding:11px 13px;color:var(--ink)}.filters input{flex:1;min-width:190px}.sectionhead{display:flex;justify-content:space-between;align-items:end;gap:10px;margin:22px 0 12px}.sectionhead h3{margin:0;font-size:19px}.sectionhead p{margin:3px 0 0;color:var(--muted);font-size:13px}
 .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}.kpi,.panel,.species-card{background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}.kpi{padding:17px}.kpi .label{color:var(--muted);font-size:12px}.kpi strong{font-size:28px;display:block;margin:4px 0}.kpi small{color:var(--green);font-size:11px}
@@ -303,7 +319,15 @@ footer{padding:24px 3px 8px;text-align:center;color:var(--muted);font-size:11px}
 <body>
 <div class="app">
   <header class="top">
-    <div class="brand"><div class="logo">✦</div><div><h1>WildGuard</h1><p>Threatened wildlife • Conservation intelligence</p></div></div>
+    <div class="brand">
+  <div class="logo">
+    <img src="./wild-guard-logo.png" alt="Wild Guard logo">
+  </div>
+  <div>
+    <h1>WildGuard</h1>
+    <p>Threatened wildlife • Conservation intelligence</p>
+  </div>
+</div>
     <div class="topright"><span class="pill">CA-2 PROJECT</span><span style="font-size:12px;color:var(--muted)">Kerala + Andhra Pradesh</span></div>
   </header>
 
