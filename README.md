@@ -55,7 +55,7 @@ AI-generated responses should be checked against reliable conservation sources. 
 
 ## 🎓 Project Information
 
-Developed as a student Environmental Studies CA1 project.
+Developed as a student Environmental Studies CA-2 project.
 
 **Project:** WildGuard — Wildlife Conservation Dashboard  
 **Focus areas:** Biodiversity awareness, conservation education, and technology for wildlife protection.
